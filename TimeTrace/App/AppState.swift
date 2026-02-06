@@ -15,6 +15,7 @@ final class AppState: ObservableObject {
     // MARK: - Navigation State
     @Published var selectedTab: Tab = .home
     @Published var showActivityPrompt: Bool = false
+    @Published var showSettings: Bool = false
 
     // MARK: - App Lifecycle
     @Published var isActive: Bool = true
@@ -26,7 +27,7 @@ final class AppState: ObservableObject {
         case activities = 1
         case timer = 2
         case tasks = 3
-        case settings = 4
+        case goals = 4
 
         var id: Int { rawValue }
 
@@ -36,7 +37,7 @@ final class AppState: ObservableObject {
             case .activities: return "Activities"
             case .timer: return "Timer"
             case .tasks: return "Tasks"
-            case .settings: return "Settings"
+            case .goals: return "Goals"
             }
         }
 
@@ -46,7 +47,7 @@ final class AppState: ObservableObject {
             case .activities: return "list.bullet.clipboard"
             case .timer: return "timer"
             case .tasks: return "checklist"
-            case .settings: return "gearshape"
+            case .goals: return "target"
             }
         }
     }

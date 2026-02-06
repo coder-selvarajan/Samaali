@@ -40,5 +40,34 @@ enum AppConstants {
         static let enableScreenTimeImport = "enableScreenTimeImport"
         static let enableAIInsights = "enableAIInsights"
         static let enableNotifications = "enableNotifications"
+
+        // Screen Time
+        static let screenTimeAuthorized = "screenTimeAuthorized"
+        static let lastScreenTimeImport = "lastScreenTimeImport"
+        static let screenTimeAutoImport = "screenTimeAutoImport"
+
+        // Appearance
+        static let appearanceMode = "appearanceMode"
+
+        // AI Insights
+        static let lastInsightGenerationDate = "lastInsightGenerationDate"
+        static let insightRefreshInterval = "insightRefreshInterval"
+        static let enableProductivityScoring = "enableProductivityScoring"
+        static let enableSentimentAnalysis = "enableSentimentAnalysis"
+        static let enablePatternDetection = "enablePatternDetection"
+    }
+
+    // MARK: - AI Insights
+    enum AIInsights {
+        static let defaultRefreshIntervalHours: Int = 24
+        static let minimumActivitiesForInsights: Int = 5
+        static let minimumDaysForPatterns: Int = 7
+        static let maxInsightsToShow: Int = 5
+    }
+
+    // MARK: - Screen Time
+    enum ScreenTime {
+        static let minimumUsageMinutesToImport: Int = 5
+        static let defaultAutoImportEnabled: Bool = false
     }
 }

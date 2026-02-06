@@ -36,11 +36,19 @@ struct MainTabView: View {
                 }
                 .tag(AppState.Tab.tasks)
 
-            SettingsView()
+            GoalsView()
                 .tabItem {
-                    Label(AppState.Tab.settings.title, systemImage: AppState.Tab.settings.icon)
+                    Label(AppState.Tab.goals.title, systemImage: AppState.Tab.goals.icon)
                 }
-                .tag(AppState.Tab.settings)
+                .tag(AppState.Tab.goals)
+        }
+        .tint(Theme.primary)
+        .sheet(isPresented: $appState.showActivityPrompt) {
+            ActivityPromptView()
+                .interactiveDismissDisabled()
+        }
+        .sheet(isPresented: $appState.showSettings) {
+            SettingsView()
         }
     }
 }

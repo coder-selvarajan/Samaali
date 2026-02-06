@@ -17,6 +17,7 @@ final class Tag {
     var isSystem: Bool
     var createdAt: Date
 
+    @Relationship(deleteRule: .nullify)
     var activities: [Activity]?
 
     init(

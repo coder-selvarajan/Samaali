@@ -10,6 +10,7 @@ import SwiftData
 
 struct TasksView: View {
     @Environment(\.modelContext) private var modelContext
+    @EnvironmentObject private var appState: AppState
     @Query(sort: \UserTask.createdAt, order: .reverse)
     private var tasks: [UserTask]
 
@@ -27,11 +28,20 @@ struct TasksView: View {
             }
             .navigationTitle("Tasks")
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        appState.showSettings = true
+                    } label: {
+                        Image(systemName: "gearshape")
+                            .foregroundStyle(Theme.primary)
+                    }
+                }
                 ToolbarItem(placement: .primaryAction) {
                     Button {
                         showingAddTask = true
                     } label: {
                         Image(systemName: "plus")
+                            .foregroundStyle(Theme.primary)
                     }
                 }
                 ToolbarItem(placement: .secondaryAction) {
@@ -99,7 +109,7 @@ struct TaskRowView: View {
             } label: {
                 Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
                     .font(.title2)
-                    .foregroundStyle(task.isCompleted ? .green : .secondary)
+                    .foregroundStyle(task.isCompleted ? Theme.success : .secondary)
             }
             .buttonStyle(.plain)
 
@@ -133,9 +143,9 @@ struct TaskRowView: View {
 
     private var priorityColor: Color {
         switch task.priority {
-        case .low: return .blue
-        case .medium: return .orange
-        case .high: return .red
+        case .low: return Theme.primary
+        case .medium: return Theme.warning
+        case .high: return Theme.error
         }
     }
 
@@ -194,6 +204,8 @@ struct AddTaskView: View {
                     Button("Add") {
                         saveTask()
                     }
+                    .fontWeight(.semibold)
+                    .foregroundStyle(Theme.primary)
                     .disabled(title.isEmpty)
                 }
             }

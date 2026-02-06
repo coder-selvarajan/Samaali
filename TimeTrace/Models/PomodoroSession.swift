@@ -18,10 +18,8 @@ final class PomodoroSession {
     var wasCompleted: Bool
     var createdAt: Date
 
-    @Relationship
     var linkedActivity: Activity?
 
-    @Relationship
     var linkedTask: UserTask?
 
     var isOngoing: Bool {

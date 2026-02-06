@@ -20,10 +20,8 @@ final class UserTask {
     var createdAt: Date
     var completedAt: Date?
 
-    @Relationship
     var tags: [Tag]?
 
-    @Relationship
     var linkedActivity: Activity?
 
     init(

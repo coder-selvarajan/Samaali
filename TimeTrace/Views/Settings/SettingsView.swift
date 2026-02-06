@@ -8,7 +8,33 @@
 import SwiftUI
 import SwiftData
 
+// MARK: - Appearance Mode
+enum AppearanceMode: Int, CaseIterable {
+    case system = 0
+    case light = 1
+    case dark = 2
+
+    var label: String {
+        switch self {
+        case .system: return "System"
+        case .light: return "Light"
+        case .dark: return "Dark"
+        }
+    }
+
+    var colorScheme: ColorScheme? {
+        switch self {
+        case .system: return nil
+        case .light: return .light
+        case .dark: return .dark
+        }
+    }
+}
+
 struct SettingsView: View {
+    @AppStorage(AppConstants.StorageKeys.appearanceMode)
+    private var appearanceMode: Int = AppearanceMode.system.rawValue
+
     @AppStorage(AppConstants.StorageKeys.activityGapThreshold)
     private var gapThreshold = AppConstants.ActivityTracking.defaultGapThresholdMinutes
 
@@ -33,6 +59,20 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             Form {
+                // Appearance
+                Section {
+                    Picker("Appearance", selection: $appearanceMode) {
+                        ForEach(AppearanceMode.allCases, id: \.rawValue) { mode in
+                            Text(mode.label).tag(mode.rawValue)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                } header: {
+                    Text("Appearance")
+                } footer: {
+                    Text("Choose how TimeTrace looks. System follows your device settings.")
+                }
+
                 // Activity Tracking
                 Section {
                     Stepper(
@@ -71,8 +111,33 @@ struct SettingsView: View {
 
                 // Integrations
                 Section {
-                    Toggle("Screen Time Import", isOn: $enableScreenTime)
-                    Toggle("AI Insights", isOn: $enableAIInsights)
+                    NavigationLink {
+                        ScreenTimeSettingsView(enableScreenTime: $enableScreenTime)
+                    } label: {
+                        HStack {
+                            Label("Screen Time", systemImage: "hourglass")
+                            Spacer()
+                            if enableScreenTime {
+                                Text("Enabled")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
+
+                    NavigationLink {
+                        AIInsightsSettingsView(enableAIInsights: $enableAIInsights)
+                    } label: {
+                        HStack {
+                            Label("AI Insights", systemImage: "sparkles")
+                            Spacer()
+                            if enableAIInsights {
+                                Text("Enabled")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
                 } header: {
                     Text("Features")
                 } footer: {
@@ -155,6 +220,7 @@ struct TagManagementView: View {
                     showingAddTag = true
                 } label: {
                     Label("Add Tag", systemImage: "plus")
+                        .foregroundStyle(Theme.primary)
                 }
             }
         }
@@ -210,11 +276,11 @@ struct AddTagView: View {
     @Environment(\.modelContext) private var modelContext
 
     @State private var name = ""
-    @State private var selectedColor = "#007AFF"
+    @State private var selectedColor = "#5856D6"
 
     private let colorOptions = [
-        "#007AFF", "#34C759", "#FF9500", "#FF2D55",
-        "#5856D6", "#AF52DE", "#00C7BE", "#FF6482"
+        "#5856D6", "#AF52DE", "#007AFF", "#34C759",
+        "#FF9500", "#FF2D55", "#00C7BE", "#FF6482"
     ]
 
     var body: some View {
@@ -255,6 +321,8 @@ struct AddTagView: View {
                     Button("Add") {
                         saveTag()
                     }
+                    .fontWeight(.semibold)
+                    .foregroundStyle(Theme.primary)
                     .disabled(name.isEmpty)
                 }
             }
@@ -265,6 +333,158 @@ struct AddTagView: View {
         let tag = Tag(name: name, colorHex: selectedColor, isSystem: false)
         modelContext.insert(tag)
         dismiss()
+    }
+}
+
+// MARK: - Screen Time Settings View
+
+struct ScreenTimeSettingsView: View {
+    @Binding var enableScreenTime: Bool
+    @Environment(\.modelContext) private var modelContext
+    @State private var viewModel: ScreenTimeViewModel?
+
+    var body: some View {
+        Form {
+            Section {
+                Toggle("Enable Screen Time Import", isOn: $enableScreenTime)
+            } footer: {
+                Text("When enabled, TimeTrace can import your Screen Time data to automatically track app usage.")
+            }
+
+            if enableScreenTime {
+                Section("Authorization") {
+                    if let vm = viewModel {
+                        HStack {
+                            Text("Status")
+                            Spacer()
+                            Text(vm.authorizationStatus.description)
+                                .foregroundStyle(vm.isAuthorized ? Theme.success : .secondary)
+                        }
+
+                        if !vm.isAuthorized {
+                            Button {
+                                Task { await vm.requestAuthorization() }
+                            } label: {
+                                HStack {
+                                    Image(systemName: "lock.open")
+                                    Text("Request Access")
+                                }
+                            }
+                        }
+                    }
+                }
+
+                Section {
+                    NavigationLink {
+                        ScreenTimeView()
+                    } label: {
+                        Label("View Screen Time Data", systemImage: "chart.pie")
+                    }
+                }
+
+                Section("About Screen Time Integration") {
+                    VStack(alignment: .leading, spacing: 8) {
+                        SettingsInfoRow(icon: "lock.shield", text: "All data stays on your device")
+                        SettingsInfoRow(icon: "arrow.down.circle", text: "Import usage as activities")
+                        SettingsInfoRow(icon: "tag", text: "Auto-categorize by app type")
+                    }
+                    .padding(.vertical, 4)
+                }
+            }
+        }
+        .navigationTitle("Screen Time")
+        .onAppear {
+            if viewModel == nil {
+                viewModel = ScreenTimeViewModel(modelContext: modelContext)
+            }
+        }
+    }
+}
+
+// MARK: - AI Insights Settings View
+
+struct AIInsightsSettingsView: View {
+    @Binding var enableAIInsights: Bool
+
+    @AppStorage(AppConstants.StorageKeys.enableProductivityScoring)
+    private var enableProductivityScoring = true
+
+    @AppStorage(AppConstants.StorageKeys.enableSentimentAnalysis)
+    private var enableSentimentAnalysis = true
+
+    @AppStorage(AppConstants.StorageKeys.enablePatternDetection)
+    private var enablePatternDetection = true
+
+    var body: some View {
+        Form {
+            Section {
+                Toggle("Enable AI Insights", isOn: $enableAIInsights)
+            } footer: {
+                Text("AI insights analyze your activity patterns to provide personalized recommendations and statistics.")
+            }
+
+            if enableAIInsights {
+                Section("Analysis Features") {
+                    Toggle("Productivity Scoring", isOn: $enableProductivityScoring)
+                    Toggle("Sentiment Analysis", isOn: $enableSentimentAnalysis)
+                    Toggle("Pattern Detection", isOn: $enablePatternDetection)
+                }
+
+                Section {
+                    NavigationLink {
+                        AIInsightsView()
+                    } label: {
+                        Label("View AI Insights", systemImage: "chart.bar.xaxis")
+                    }
+                }
+
+                Section("Privacy") {
+                    VStack(alignment: .leading, spacing: 8) {
+                        SettingsInfoRow(icon: "iphone", text: "100% on-device processing")
+                        SettingsInfoRow(icon: "xmark.icloud", text: "No cloud data transmission")
+                        SettingsInfoRow(icon: "hand.raised", text: "Your data never leaves your device")
+                    }
+                    .padding(.vertical, 4)
+                }
+
+                Section("How It Works") {
+                    VStack(alignment: .leading, spacing: 12) {
+                        SettingsInfoRow(
+                            icon: "waveform.path.ecg",
+                            text: "Analyzes activity patterns over time"
+                        )
+                        SettingsInfoRow(
+                            icon: "brain.head.profile",
+                            text: "Uses Apple's NaturalLanguage framework"
+                        )
+                        SettingsInfoRow(
+                            icon: "lightbulb",
+                            text: "Generates personalized insights"
+                        )
+                    }
+                    .padding(.vertical, 4)
+                }
+            }
+        }
+        .navigationTitle("AI Insights")
+    }
+}
+
+// MARK: - Settings Info Row
+
+private struct SettingsInfoRow: View {
+    let icon: String
+    let text: String
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: icon)
+                .foregroundStyle(Theme.primary)
+                .frame(width: 20)
+            Text(text)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+        }
     }
 }
 

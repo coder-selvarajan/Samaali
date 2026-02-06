@@ -12,13 +12,24 @@ import SwiftData
 struct TimeTraceApp: App {
     @StateObject private var appState = AppState()
     @Environment(\.scenePhase) private var scenePhase
+    @AppStorage(AppConstants.StorageKeys.appearanceMode) private var appearanceMode: Int = 0
+
+    private var preferredColorScheme: ColorScheme? {
+        switch appearanceMode {
+        case 1: return .light
+        case 2: return .dark
+        default: return nil
+        }
+    }
 
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Activity.self,
             Tag.self,
             UserTask.self,
-            PomodoroSession.self
+            PomodoroSession.self,
+            Goal.self,
+            GoalComment.self
         ])
         let modelConfiguration = ModelConfiguration(
             schema: schema,
@@ -28,7 +39,31 @@ struct TimeTraceApp: App {
         do {
             return try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {
-            fatalError("Could not create ModelContainer: \(error)")
+            // During development, if schema changes cause issues, delete the old store
+            print("ModelContainer creation failed: \(error)")
+            print("Attempting to delete existing store and recreate...")
+
+            // Get the default store URL
+            let url = URL.applicationSupportDirectory.appending(path: "default.store")
+
+            // Delete existing store files
+            let fileManager = FileManager.default
+            let storePaths = [
+                url.path(),
+                url.path() + "-shm",
+                url.path() + "-wal"
+            ]
+
+            for path in storePaths {
+                try? fileManager.removeItem(atPath: path)
+            }
+
+            // Try again
+            do {
+                return try ModelContainer(for: schema, configurations: [modelConfiguration])
+            } catch {
+                fatalError("Could not create ModelContainer after cleanup: \(error)")
+            }
         }
     }()
 
@@ -36,6 +71,7 @@ struct TimeTraceApp: App {
         WindowGroup {
             MainTabView()
                 .environmentObject(appState)
+                .preferredColorScheme(preferredColorScheme)
                 .onAppear {
                     initializeAppData()
                 }
