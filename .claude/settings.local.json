@@ -1,7 +1,13 @@
 {
   "permissions": {
     "allow": [
-      "Bash(xcodebuild:*)"
+      "Bash(xcodebuild:*)",
+      "Bash(/Users/selvarajan/.claude/statusline-command.sh)",
+      "Bash(chmod:*)",
+      "Bash(bash /Users/selvarajan/.claude/statusline-command.sh)",
+      "Bash(git -C /Users/selvarajan/Documents/_ST/_Projects/TimeTraceApp/source-code/TimeTrace log --oneline)",
+      "Bash(git add CLAUDE.md .claude/settings.local.json)",
+      "Bash(git commit:*)"
     ]
   }
 }
