@@ -17,11 +17,59 @@ struct TasksView: View {
     @State private var showingAddTask = false
     @State private var filterCompleted = false
 
+    private let calendar = Calendar.current
+
+    private var startOfToday: Date { calendar.startOfDay(for: Date()) }
+
+    // MARK: - Task Groups
+
+    private var pendingTasks: [UserTask] { tasks.filter { !$0.isCompleted } }
+
+    private var overdueTasks: [UserTask] {
+        pendingTasks.filter { task in
+            guard let dueDate = task.dueDate else { return false }
+            return dueDate < startOfToday
+        }.sorted { ($0.dueDate ?? .distantFuture) < ($1.dueDate ?? .distantFuture) }
+    }
+
+    private var todayTasks: [UserTask] {
+        pendingTasks.filter { task in
+            guard let dueDate = task.dueDate else { return false }
+            return calendar.isDateInToday(dueDate)
+        }.sorted { ($0.dueDate ?? .distantFuture) < ($1.dueDate ?? .distantFuture) }
+    }
+
+    private var laterTasks: [UserTask] {
+        pendingTasks.filter { task in
+            guard let dueDate = task.dueDate else { return false }
+            return dueDate >= calendar.date(byAdding: .day, value: 1, to: startOfToday)!
+        }.sorted { ($0.dueDate ?? .distantFuture) < ($1.dueDate ?? .distantFuture) }
+    }
+
+    private var noDateTasks: [UserTask] {
+        pendingTasks.filter { $0.dueDate == nil }
+            .sorted { $0.createdAt > $1.createdAt }
+    }
+
+    private var completedTasks: [UserTask] {
+        tasks.filter { $0.isCompleted }
+            .sorted { ($0.completedAt ?? .distantPast) > ($1.completedAt ?? .distantPast) }
+    }
+
+    private var hasVisibleTasks: Bool {
+        !overdueTasks.isEmpty || !todayTasks.isEmpty || !laterTasks.isEmpty
+            || !noDateTasks.isEmpty || (filterCompleted && !completedTasks.isEmpty)
+    }
+
+    // MARK: - Body
+
     var body: some View {
         NavigationStack {
             Group {
                 if tasks.isEmpty {
                     emptyStateView
+                } else if !hasVisibleTasks {
+                    allDoneView
                 } else {
                     taskListView
                 }
@@ -58,12 +106,7 @@ struct TasksView: View {
         }
     }
 
-    private var filteredTasks: [UserTask] {
-        if filterCompleted {
-            return tasks
-        }
-        return tasks.filter { !$0.isCompleted }
-    }
+    // MARK: - Sub Views
 
     private var emptyStateView: some View {
         ContentUnavailableView(
@@ -73,19 +116,78 @@ struct TasksView: View {
         )
     }
 
+    private var allDoneView: some View {
+        ContentUnavailableView(
+            "All Done!",
+            systemImage: "checkmark.circle.fill",
+            description: Text("All tasks completed. Enable 'Show Completed' to review them.")
+        )
+    }
+
     private var taskListView: some View {
         List {
-            ForEach(filteredTasks) { task in
-                TaskRowView(task: task)
+            if !overdueTasks.isEmpty {
+                Section {
+                    ForEach(overdueTasks) { task in TaskRowView(task: task) }
+                        .onDelete { deleteTasksFrom(overdueTasks, at: $0) }
+                } header: {
+                    taskSectionHeader(title: "Overdue", systemImage: "exclamationmark.circle.fill", color: .red)
+                }
             }
-            .onDelete(perform: deleteTasks)
+
+            if !todayTasks.isEmpty {
+                Section {
+                    ForEach(todayTasks) { task in TaskRowView(task: task) }
+                        .onDelete { deleteTasksFrom(todayTasks, at: $0) }
+                } header: {
+                    taskSectionHeader(title: "Today", systemImage: "sun.max.fill", color: .orange)
+                }
+            }
+
+            if !laterTasks.isEmpty {
+                Section {
+                    ForEach(laterTasks) { task in TaskRowView(task: task) }
+                        .onDelete { deleteTasksFrom(laterTasks, at: $0) }
+                } header: {
+                    taskSectionHeader(title: "Later", systemImage: "calendar", color: Theme.primary)
+                }
+            }
+
+            if !noDateTasks.isEmpty {
+                Section {
+                    ForEach(noDateTasks) { task in TaskRowView(task: task) }
+                        .onDelete { deleteTasksFrom(noDateTasks, at: $0) }
+                } header: {
+                    taskSectionHeader(title: "No Date", systemImage: "tray", color: .secondary)
+                }
+            }
+
+            if filterCompleted && !completedTasks.isEmpty {
+                Section {
+                    ForEach(completedTasks) { task in TaskRowView(task: task) }
+                        .onDelete { deleteTasksFrom(completedTasks, at: $0) }
+                } header: {
+                    taskSectionHeader(title: "Completed", systemImage: "checkmark.circle.fill", color: Theme.success)
+                }
+            }
         }
         .listStyle(.insetGrouped)
     }
 
-    private func deleteTasks(at offsets: IndexSet) {
+    private func taskSectionHeader(title: String, systemImage: String, color: Color) -> some View {
+        HStack(spacing: 6) {
+            Image(systemName: systemImage)
+                .foregroundStyle(color)
+            Text(title)
+                .fontWeight(.semibold)
+        }
+    }
+
+    private func deleteTasksFrom(_ taskGroup: [UserTask], at offsets: IndexSet) {
         for index in offsets {
-            modelContext.delete(filteredTasks[index])
+            let task = taskGroup[index]
+            NotificationService.shared.cancelTaskReminder(taskId: task.id)
+            modelContext.delete(task)
         }
     }
 }
@@ -102,8 +204,14 @@ struct TaskRowView: View {
                     task.isCompleted.toggle()
                     if task.isCompleted {
                         task.completedAt = Date()
+                        if task.reminderDate != nil {
+                            NotificationService.shared.cancelTaskReminder(taskId: task.id)
+                        }
                     } else {
                         task.completedAt = nil
+                        if let reminderDate = task.reminderDate, reminderDate > Date() {
+                            NotificationService.shared.scheduleTaskReminder(task: task)
+                        }
                     }
                 }
             } label: {
@@ -122,6 +230,8 @@ struct TaskRowView: View {
                     HStack(spacing: 4) {
                         Image(systemName: "calendar")
                         Text(dueDate, style: .date)
+                        Text("·")
+                        Text(dueDate, style: .time)
                     }
                     .font(.caption)
                     .foregroundStyle(isOverdue(dueDate) ? .red : .secondary)
@@ -130,7 +240,14 @@ struct TaskRowView: View {
 
             Spacer()
 
-            priorityIndicator
+            HStack(spacing: 8) {
+                if task.reminderDate != nil {
+                    Image(systemName: "bell.fill")
+                        .font(.caption)
+                        .foregroundStyle(Theme.primary)
+                }
+                priorityIndicator
+            }
         }
         .padding(.vertical, 4)
     }
@@ -164,6 +281,7 @@ struct AddTaskView: View {
     @State private var notes = ""
     @State private var hasDueDate = false
     @State private var dueDate = Date()
+    @State private var hasReminder = false
     @State private var priority: TaskPriority = .medium
 
     var body: some View {
@@ -177,8 +295,21 @@ struct AddTaskView: View {
 
                 Section("Due Date") {
                     Toggle("Set Due Date", isOn: $hasDueDate)
+                        .onChange(of: hasDueDate) { _, newValue in
+                            if !newValue { hasReminder = false }
+                        }
                     if hasDueDate {
                         DatePicker("Due", selection: $dueDate, displayedComponents: [.date, .hourAndMinute])
+                        Toggle(isOn: $hasReminder) {
+                            Label("Remind me at due time", systemImage: "bell")
+                        }
+                        .onChange(of: hasReminder) { _, newValue in
+                            if newValue {
+                                Task {
+                                    try? await NotificationService.shared.requestAuthorization()
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -213,13 +344,20 @@ struct AddTaskView: View {
     }
 
     private func saveTask() {
+        let reminderDate = (hasDueDate && hasReminder) ? dueDate : nil
         let task = UserTask(
             title: title,
             notes: notes.isEmpty ? nil : notes,
             dueDate: hasDueDate ? dueDate : nil,
+            reminderDate: reminderDate,
             priority: priority
         )
         modelContext.insert(task)
+
+        if hasDueDate && hasReminder {
+            NotificationService.shared.scheduleTaskReminder(task: task)
+        }
+
         dismiss()
     }
 }
