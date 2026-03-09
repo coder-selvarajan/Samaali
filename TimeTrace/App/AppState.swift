@@ -24,9 +24,9 @@ final class AppState: ObservableObject {
     // MARK: - Tab Definition
     enum Tab: Int, CaseIterable, Identifiable {
         case home = 0
-        case activities = 1
-        case timer = 2
-        case tasks = 3
+        case timer = 1
+        case tasks = 2
+        case habits = 3
         case goals = 4
 
         var id: Int { rawValue }
@@ -34,9 +34,9 @@ final class AppState: ObservableObject {
         var title: String {
             switch self {
             case .home: return "Home"
-            case .activities: return "Activities"
             case .timer: return "Timer"
             case .tasks: return "Tasks"
+            case .habits: return "Habits"
             case .goals: return "Goals"
             }
         }
@@ -44,9 +44,9 @@ final class AppState: ObservableObject {
         var icon: String {
             switch self {
             case .home: return "house.fill"
-            case .activities: return "list.bullet.clipboard"
             case .timer: return "timer"
             case .tasks: return "checklist"
+            case .habits: return "repeat.circle"
             case .goals: return "target"
             }
         }

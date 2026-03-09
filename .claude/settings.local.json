@@ -7,7 +7,9 @@
       "Bash(bash /Users/selvarajan/.claude/statusline-command.sh)",
       "Bash(git -C /Users/selvarajan/Documents/_ST/_Projects/TimeTraceApp/source-code/TimeTrace log --oneline)",
       "Bash(git add CLAUDE.md .claude/settings.local.json)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(git add TimeTrace/Views/Tasks/TasksView.swift)",
+      "WebSearch"
     ]
   }
 }

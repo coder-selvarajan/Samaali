@@ -325,8 +325,8 @@ struct HomeView: View {
                 Text("Recent Activities")
                     .font(.headline)
                 Spacer()
-                Button("See All") {
-                    appState.selectedTab = .activities
+                NavigationLink("See All") {
+                    ActivitiesView()
                 }
                 .font(.subheadline)
                 .foregroundStyle(Theme.primary)

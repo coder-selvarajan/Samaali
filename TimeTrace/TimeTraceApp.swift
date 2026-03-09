@@ -29,7 +29,9 @@ struct TimeTraceApp: App {
             UserTask.self,
             PomodoroSession.self,
             Goal.self,
-            GoalComment.self
+            GoalComment.self,
+            Habit.self,
+            HabitLog.self
         ])
         let modelConfiguration = ModelConfiguration(
             schema: schema,

@@ -18,12 +18,6 @@ struct MainTabView: View {
                 }
                 .tag(AppState.Tab.home)
 
-            ActivitiesView()
-                .tabItem {
-                    Label(AppState.Tab.activities.title, systemImage: AppState.Tab.activities.icon)
-                }
-                .tag(AppState.Tab.activities)
-
             PomodoroView()
                 .tabItem {
                     Label(AppState.Tab.timer.title, systemImage: AppState.Tab.timer.icon)
@@ -35,6 +29,12 @@ struct MainTabView: View {
                     Label(AppState.Tab.tasks.title, systemImage: AppState.Tab.tasks.icon)
                 }
                 .tag(AppState.Tab.tasks)
+
+            HabitsView()
+                .tabItem {
+                    Label(AppState.Tab.habits.title, systemImage: AppState.Tab.habits.icon)
+                }
+                .tag(AppState.Tab.habits)
 
             GoalsView()
                 .tabItem {
