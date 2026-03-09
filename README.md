@@ -1,8 +1,8 @@
-# TimeTrace
+# DayArc
 
-TimeTrace is a personal iOS app designed to track, analyze, and improve how users spend their time throughout the day.
+DayArc is a personal iOS app designed to track, analyze, and improve how users spend their time throughout the day.
 
-Unlike traditional productivity apps, TimeTrace focuses on awareness and reflection rather than pressure. The app combines manual activity logging, automation (screen time, timers), visual analytics, and on-device AI insights.
+Unlike traditional productivity apps, DayArc focuses on awareness and reflection rather than pressure. The app combines manual activity logging, automation (screen time, timers), visual analytics, and on-device AI insights.
 
 ---
 
@@ -144,4 +144,4 @@ Everything must be configurable:
 - Non-judgmental
 - Insightful, not preachy
 
-TimeTrace should feel like a quiet mirror for your day, not a boss.
+DayArc should feel like a quiet mirror for your day, not a boss.

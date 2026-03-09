@@ -1,9 +1,9 @@
 # Claude Code - Prompt 1: 
 
 You are an expert iOS engineer, product designer, and architect.
-You are helping me build an iOS app called “TimeTrace”.
+You are helping me build an iOS app called “DayArc”.
 
-TimeTrace is a personal activity tracking, time analytics, and productivity app.
+DayArc is a personal activity tracking, time analytics, and productivity app.
 The goal is to help users understand where their time goes, classify activities,
 build better habits, and receive on-device AI insights — without being intrusive.
 
@@ -37,7 +37,7 @@ Do not over-engineer. Favor pragmatic, shippable solutions.
 
 ## Prompt A: App Architecture & Folder Structure: 
 
-Design the overall architecture for TimeTrace.
+Design the overall architecture for DayArc.
 Propose:
 - Folder structure
 - Core modules
@@ -50,7 +50,7 @@ Keep it simple and scalable.
 
 ## Prompt B: Activity Data Model: 
 
-Create the Activity data model for TimeTrace.
+Create the Activity data model for DayArc.
 
 Include:
 - Time tracking fields
@@ -73,7 +73,7 @@ Include:
 - Edge cases
 
 ## Prompt D: Home Dashboard Charts
-Design the Home screen dashboard for TimeTrace.
+Design the Home screen dashboard for DayArc.
 
 Include:
 - Chart types
@@ -83,7 +83,7 @@ Include:
 - Customization support
 
 ## Prompt E: Pomodoro Timer
-Implement a Pomodoro timer for TimeTrace.
+Implement a Pomodoro timer for DayArc.
 
 Requirements:
 - Configurable durations
@@ -103,7 +103,7 @@ Include:
 - Tagging strategy
 
 ## Prompt G: On-Device AI Insights
-Propose an on-device AI system for TimeTrace.
+Propose an on-device AI system for DayArc.
 
 Include:
 - Data pipeline
