@@ -1,9 +1,9 @@
 # Claude Code - Prompt 1: 
 
 You are an expert iOS engineer, product designer, and architect.
-You are helping me build an iOS app called “DayArc”.
+You are helping me build an iOS app called “Samaali”.
 
-DayArc is a personal activity tracking, time analytics, and productivity app.
+Samaali is a personal activity tracking, time analytics, and productivity app.
 The goal is to help users understand where their time goes, classify activities,
 build better habits, and receive on-device AI insights — without being intrusive.
 
@@ -37,7 +37,7 @@ Do not over-engineer. Favor pragmatic, shippable solutions.
 
 ## Prompt A: App Architecture & Folder Structure: 
 
-Design the overall architecture for DayArc.
+Design the overall architecture for Samaali.
 Propose:
 - Folder structure
 - Core modules
@@ -50,7 +50,7 @@ Keep it simple and scalable.
 
 ## Prompt B: Activity Data Model: 
 
-Create the Activity data model for DayArc.
+Create the Activity data model for Samaali.
 
 Include:
 - Time tracking fields
@@ -73,7 +73,7 @@ Include:
 - Edge cases
 
 ## Prompt D: Home Dashboard Charts
-Design the Home screen dashboard for DayArc.
+Design the Home screen dashboard for Samaali.
 
 Include:
 - Chart types
@@ -83,7 +83,7 @@ Include:
 - Customization support
 
 ## Prompt E: Pomodoro Timer
-Implement a Pomodoro timer for DayArc.
+Implement a Pomodoro timer for Samaali.
 
 Requirements:
 - Configurable durations
@@ -103,7 +103,7 @@ Include:
 - Tagging strategy
 
 ## Prompt G: On-Device AI Insights
-Propose an on-device AI system for DayArc.
+Propose an on-device AI system for Samaali.
 
 Include:
 - Data pipeline

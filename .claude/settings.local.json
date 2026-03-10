@@ -12,7 +12,13 @@
       "WebSearch",
       "Bash(git add CLAUDE.md README.md Prompts.md DayArc.xcodeproj/ DayArc/ TimeTrace.xcodeproj/ TimeTrace/)",
       "Bash(gh repo rename DayArc --repo coder-selvarajan/TimeTrace --yes)",
-      "Bash(git push origin main)"
+      "Bash(git push origin main)",
+      "Bash(git mv DayArc/DayArcApp.swift DayArc/SamaaliApp.swift)",
+      "Bash(git mv DayArc DayArc_temp)",
+      "Bash(git mv DayArc_temp Samaali)",
+      "Bash(git mv DayArc.xcodeproj DayArc_temp.xcodeproj)",
+      "Bash(git mv DayArc_temp.xcodeproj Samaali.xcodeproj)",
+      "Bash(git add CLAUDE.md README.md Prompts.md Samaali.xcodeproj/ Samaali/ .claude/settings.local.json)"
     ]
   }
 }

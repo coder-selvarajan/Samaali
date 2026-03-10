@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 This is a native iOS app (Xcode project, no SPM/CocoaPods dependencies). Build and run with:
 
 ```bash
-xcodebuild -project DayArc.xcodeproj -scheme DayArc -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16' build
+xcodebuild -project Samaali.xcodeproj -scheme Samaali -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16' build
 ```
 
 There are no test targets configured. No linter is set up.
@@ -28,21 +28,21 @@ Global navigation state is managed by `AppState` (`@MainActor ObservableObject`)
 
 ### Key Directories
 
-- `DayArc/Models/` — SwiftData `@Model` classes: Activity, Tag, UserTask, PomodoroSession, Goal, GoalComment. Also Insight (value type, not persisted).
-- `DayArc/Services/` — Business logic: ActivityService, TagService, SettingsService, ScreenTimeService, AIInsightsService, NotificationService.
-- `DayArc/ViewModels/` — HomeViewModel, PomodoroViewModel, ScreenTimeViewModel, AIInsightsViewModel.
-- `DayArc/Views/` — Organized by feature: Home, Activities, Timer, Tasks, Goals, Insights, ScreenTime, Settings, plus Main (tab view) and Components.
-- `DayArc/Utilities/` — Constants.swift (config values, UserDefaults keys), Theme.swift (colors, gradients, button styles).
-- `DayArc/Extensions/` — Date+Extensions.swift, Color+Hex.swift.
-- `DayArc/App/` — AppState.swift (global navigation state).
+- `Samaali/Models/` — SwiftData `@Model` classes: Activity, Tag, UserTask, PomodoroSession, Goal, GoalComment. Also Insight (value type, not persisted).
+- `Samaali/Services/` — Business logic: ActivityService, TagService, SettingsService, ScreenTimeService, AIInsightsService, NotificationService.
+- `Samaali/ViewModels/` — HomeViewModel, PomodoroViewModel, ScreenTimeViewModel, AIInsightsViewModel.
+- `Samaali/Views/` — Organized by feature: Home, Activities, Timer, Tasks, Goals, Insights, ScreenTime, Settings, plus Main (tab view) and Components.
+- `Samaali/Utilities/` — Constants.swift (config values, UserDefaults keys), Theme.swift (colors, gradients, button styles).
+- `Samaali/Extensions/` — Date+Extensions.swift, Color+Hex.swift.
+- `Samaali/App/` — AppState.swift (global navigation state).
 
 ### Model Container Setup
 
-`DayArcApp.swift` creates the SwiftData container with all 6 model types. On schema mismatch, it deletes and recreates the store (development convenience — change before shipping). System tags are initialized on first launch via `TagService.initializeSystemTagsIfNeeded()`.
+`SamaaliApp.swift` creates the SwiftData container with all 6 model types. On schema mismatch, it deletes and recreates the store (development convenience — change before shipping). System tags are initialized on first launch via `TagService.initializeSystemTagsIfNeeded()`.
 
 ### Activity Gap Detection
 
-When the app becomes active, it checks time elapsed since the last activity. If it exceeds the configurable threshold (default 60 min), an `ActivityPromptView` modal is shown. This logic lives in `DayArcApp.swift` using scene phase observation.
+When the app becomes active, it checks time elapsed since the last activity. If it exceeds the configurable threshold (default 60 min), an `ActivityPromptView` modal is shown. This logic lives in `SamaaliApp.swift` using scene phase observation.
 
 ## Design Principles
 

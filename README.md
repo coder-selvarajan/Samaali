@@ -1,8 +1,8 @@
-# DayArc
+# Samaali
 
-DayArc is a personal iOS app designed to track, analyze, and improve how users spend their time throughout the day.
+Samaali is a personal iOS app designed to track, analyze, and improve how users spend their time throughout the day.
 
-Unlike traditional productivity apps, DayArc focuses on awareness and reflection rather than pressure. The app combines manual activity logging, automation (screen time, timers), visual analytics, and on-device AI insights.
+Unlike traditional productivity apps, Samaali focuses on awareness and reflection rather than pressure. The app combines manual activity logging, automation (screen time, timers), visual analytics, and on-device AI insights.
 
 ---
 
@@ -144,4 +144,4 @@ Everything must be configurable:
 - Non-judgmental
 - Insightful, not preachy
 
-DayArc should feel like a quiet mirror for your day, not a boss.
+Samaali should feel like a quiet mirror for your day, not a boss.
