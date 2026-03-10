@@ -68,6 +68,7 @@ struct HabitsView: View {
             }
             .listRowBackground(Color.clear)
             .listRowInsets(EdgeInsets())
+            .listSectionSpacing(0)
 
             // Week overview
             Section {
@@ -95,6 +96,7 @@ struct HabitsView: View {
         }
         .listStyle(.insetGrouped)
         .listSectionSpacing(.compact)
+        .contentMargins(.top, 0)
     }
 
     private var dateNavigationView: some View {
@@ -140,7 +142,7 @@ struct HabitsView: View {
             .disabled(isFutureDate)
         }
         .padding(.horizontal)
-        .padding(.vertical, 8)
+        .padding(.vertical, 4)
     }
 
     private var weekOverviewView: some View {
