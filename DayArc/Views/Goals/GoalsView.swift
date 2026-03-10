@@ -213,6 +213,9 @@ struct GoalTileView: View {
         Color(hex: goal.colorHex) ?? Theme.primary
     }
 
+    private let textPrimary = Color(red: 0.2, green: 0.2, blue: 0.25)
+    private let textSecondary = Color(red: 0.35, green: 0.35, blue: 0.4)
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             // Header with icon and status
@@ -220,18 +223,18 @@ struct GoalTileView: View {
                 if let icon = goal.icon {
                     Image(systemName: icon)
                         .font(.title2)
-                        .foregroundStyle(.white.opacity(0.9))
+                        .foregroundStyle(textPrimary.opacity(0.8))
                 } else {
                     Image(systemName: "target")
                         .font(.title2)
-                        .foregroundStyle(.white.opacity(0.9))
+                        .foregroundStyle(textPrimary.opacity(0.8))
                 }
 
                 Spacer()
 
                 Image(systemName: goal.status.icon)
                     .font(.caption)
-                    .foregroundStyle(.white.opacity(0.8))
+                    .foregroundStyle(textSecondary)
             }
 
             Spacer()
@@ -240,7 +243,7 @@ struct GoalTileView: View {
             Text(goal.title)
                 .font(.headline)
                 .fontWeight(.semibold)
-                .foregroundStyle(.white)
+                .foregroundStyle(textPrimary)
                 .lineLimit(2)
                 .multilineTextAlignment(.leading)
 
@@ -248,7 +251,7 @@ struct GoalTileView: View {
             if !goal.goalDescription.isEmpty {
                 Text(goal.goalDescription)
                     .font(.caption)
-                    .foregroundStyle(.white.opacity(0.8))
+                    .foregroundStyle(textSecondary)
                     .lineLimit(2)
             }
 
@@ -259,7 +262,7 @@ struct GoalTileView: View {
                 Text(goal.timelineDescription)
                     .font(.caption2)
             }
-            .foregroundStyle(.white.opacity(0.7))
+            .foregroundStyle(textSecondary)
 
             // Progress bar
             VStack(alignment: .leading, spacing: 4) {
@@ -271,16 +274,16 @@ struct GoalTileView: View {
                         .font(.caption2)
                         .fontWeight(.medium)
                 }
-                .foregroundStyle(.white.opacity(0.8))
+                .foregroundStyle(textSecondary)
 
                 GeometryReader { geometry in
                     ZStack(alignment: .leading) {
                         RoundedRectangle(cornerRadius: 4)
-                            .fill(.white.opacity(0.3))
+                            .fill(textPrimary.opacity(0.15))
                             .frame(height: 6)
 
                         RoundedRectangle(cornerRadius: 4)
-                            .fill(.white)
+                            .fill(textPrimary.opacity(0.5))
                             .frame(width: geometry.size.width * goal.progress, height: 6)
                     }
                 }
@@ -291,13 +294,13 @@ struct GoalTileView: View {
         .frame(minHeight: 180)
         .background(
             LinearGradient(
-                colors: [tileColor, tileColor.opacity(0.8)],
+                colors: [tileColor, tileColor.opacity(0.85)],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
         )
         .clipShape(RoundedRectangle(cornerRadius: AppConstants.UI.cornerRadius))
-        .shadow(color: tileColor.opacity(0.3), radius: 8, y: 4)
+        .shadow(color: tileColor.opacity(0.25), radius: 6, y: 3)
     }
 }
 

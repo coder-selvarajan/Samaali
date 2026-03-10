@@ -65,7 +65,7 @@ final class Goal {
         id: UUID = UUID(),
         title: String,
         goalDescription: String = "",
-        colorHex: String = "#5856D6",
+        colorHex: String = "#B8B5E0",
         status: GoalStatus = .notStarted,
         startDate: Date = Date(),
         targetDate: Date? = nil,

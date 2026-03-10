@@ -32,6 +32,8 @@ enum AppearanceMode: Int, CaseIterable {
 }
 
 struct SettingsView: View {
+    @Environment(\.modelContext) private var modelContext
+
     @AppStorage(AppConstants.StorageKeys.appearanceMode)
     private var appearanceMode: Int = AppearanceMode.system.rawValue
 
@@ -55,6 +57,9 @@ struct SettingsView: View {
 
     @AppStorage(AppConstants.StorageKeys.enableNotifications)
     private var enableNotifications = true
+
+    @State private var showClearConfirmation = false
+    @State private var testDataMessage: String?
 
     var body: some View {
         NavigationStack {
@@ -175,6 +180,29 @@ struct SettingsView: View {
                     }
                 }
 
+                // Test Data
+                Section {
+                    Button {
+                        generateTestData()
+                    } label: {
+                        Label("Generate Test Data", systemImage: "plus.rectangle.on.folder")
+                    }
+
+                    Button(role: .destructive) {
+                        showClearConfirmation = true
+                    } label: {
+                        Label("Clear All Data", systemImage: "trash")
+                    }
+                } header: {
+                    Text("Developer")
+                } footer: {
+                    if let message = testDataMessage {
+                        Text(message)
+                    } else {
+                        Text("Generate sample tasks, habits, goals, and activities for testing.")
+                    }
+                }
+
                 // About
                 Section("About") {
                     HStack {
@@ -190,6 +218,145 @@ struct SettingsView: View {
                 }
             }
             .navigationTitle("Settings")
+            .alert("Clear All Data", isPresented: $showClearConfirmation) {
+                Button("Cancel", role: .cancel) { }
+                Button("Clear", role: .destructive) {
+                    clearAllData()
+                }
+            } message: {
+                Text("This will delete all tasks, habits, goals, and activities. This cannot be undone.")
+            }
+        }
+    }
+
+    // MARK: - Test Data Generation
+
+    private func generateTestData() {
+        let calendar = Calendar.current
+        let now = Date()
+
+        // Sample Activities (spread across last 7 days)
+        let activityData: [(String, String?, Int, Int)] = [
+            ("Morning workout", "30 min cardio + stretching", -1, 60),
+            ("Team standup meeting", "Discussed sprint progress", -1, 30),
+            ("Deep work: Feature development", "Implemented new settings page", -2, 120),
+            ("Lunch break", nil, -2, 45),
+            ("Code review", "Reviewed 3 pull requests", -3, 60),
+            ("Reading: Swift Concurrency", "Chapter 5-6", -3, 40),
+            ("Grocery shopping", nil, -4, 35),
+            ("Design brainstorming", "Wireframes for new dashboard", -5, 90),
+            ("Email & Slack catch-up", nil, -5, 25),
+            ("Evening walk", "Walked around the park", -6, 30),
+        ]
+
+        for (title, notes, dayOffset, durationMinutes) in activityData {
+            let startTime = calendar.date(byAdding: .day, value: dayOffset, to: now)!
+            let endTime = calendar.date(byAdding: .minute, value: durationMinutes, to: startTime)!
+            let activity = Activity(
+                title: title,
+                notes: notes,
+                startTime: startTime,
+                endTime: endTime,
+                source: .manual
+            )
+            modelContext.insert(activity)
+        }
+
+        // Sample Tasks
+        let taskData: [(String, String?, TaskPriority, Int?, Bool)] = [
+            ("Review project proposal", "Check budget and timeline sections", .high, 1, false),
+            ("Update documentation", "Add API endpoint descriptions", .medium, 3, false),
+            ("Fix login bug", "Users reported timeout on slow connections", .high, 0, false),
+            ("Prepare presentation slides", "Q1 results overview", .medium, 5, false),
+            ("Order office supplies", nil, .low, 7, false),
+            ("Write unit tests for auth module", nil, .medium, -1, true),
+            ("Schedule dentist appointment", nil, .low, -2, true),
+            ("Submit expense report", "March expenses", .high, 2, false),
+        ]
+
+        for (title, notes, priority, dueDayOffset, isCompleted) in taskData {
+            let dueDate = dueDayOffset.map { calendar.date(byAdding: .day, value: $0, to: now)! }
+            let task = UserTask(
+                title: title,
+                notes: notes,
+                isCompleted: isCompleted,
+                dueDate: dueDate,
+                priority: priority
+            )
+            modelContext.insert(task)
+        }
+
+        // Sample Goals
+        let goalData: [(String, String, GoalStatus, Double, Int, Int, String, String?)] = [
+            ("Learn SwiftUI", "Master SwiftUI framework for building iOS apps", .inProgress, 0.6, 5, 3, "#D4B8E0", "book.fill"),
+            ("Run a half marathon", "Train and complete a 21K race", .inProgress, 0.35, 4, 1, "#F0B8C0", "figure.run"),
+            ("Read 24 books this year", "2 books per month reading challenge", .inProgress, 0.25, 24, 6, "#B8E0C8", "books.vertical.fill"),
+            ("Save emergency fund", "Build 6-month expense buffer", .notStarted, 0.0, 6, 0, "#F5D5B0", "dollarsign.circle.fill"),
+            ("Complete online course", "Finished the advanced iOS development course", .completed, 1.0, 10, 10, "#B3D4F5", "graduationcap.fill"),
+        ]
+
+        for (title, description, status, progress, milestones, completed, color, icon) in goalData {
+            let targetDate = calendar.date(byAdding: .month, value: 3, to: now)
+            let goal = Goal(
+                title: title,
+                goalDescription: description,
+                colorHex: color,
+                status: status,
+                targetDate: targetDate,
+                progress: progress,
+                milestones: milestones,
+                completedMilestones: completed,
+                icon: icon
+            )
+            modelContext.insert(goal)
+        }
+
+        // Sample Habits
+        let habitData: [(String, String, String)] = [
+            ("Meditate", "brain.head.profile", "#AF52DE"),
+            ("Exercise", "figure.walk", "#FF2D55"),
+            ("Read", "book.fill", "#007AFF"),
+            ("Drink water", "drop.fill", "#00C7BE"),
+            ("Journal", "pencil.and.scribble", "#FF9500"),
+        ]
+
+        for (name, icon, color) in habitData {
+            let habit = Habit(name: name, icon: icon, colorHex: color)
+            // Add some completion logs for the past week
+            for dayOffset in -6...0 {
+                if Bool.random() {
+                    let date = calendar.date(byAdding: .day, value: dayOffset, to: now)!
+                    let log = HabitLog(date: date, isCompleted: true, completedAt: date)
+                    log.habit = habit
+                    modelContext.insert(log)
+                }
+            }
+            modelContext.insert(habit)
+        }
+
+        testDataMessage = "Generated 10 activities, 8 tasks, 5 goals, and 5 habits."
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            testDataMessage = nil
+        }
+    }
+
+    private func clearAllData() {
+        do {
+            try modelContext.delete(model: Activity.self)
+            try modelContext.delete(model: UserTask.self)
+            try modelContext.delete(model: Goal.self)
+            try modelContext.delete(model: GoalComment.self)
+            try modelContext.delete(model: Habit.self)
+            try modelContext.delete(model: HabitLog.self)
+            try modelContext.delete(model: PomodoroSession.self)
+            testDataMessage = "All data cleared."
+        } catch {
+            testDataMessage = "Failed to clear data: \(error.localizedDescription)"
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            testDataMessage = nil
         }
     }
 }

@@ -24,6 +24,9 @@ struct GoalDetailView: View {
         Color(hex: goal.colorHex) ?? Theme.primary
     }
 
+    private let headerTextColor = Color(red: 0.2, green: 0.2, blue: 0.25)
+    private let headerTextSecondary = Color(red: 0.35, green: 0.35, blue: 0.4)
+
     var body: some View {
         ScrollView {
             VStack(spacing: 0) {
@@ -117,23 +120,23 @@ struct GoalDetailView: View {
                 if let icon = goal.icon {
                     Image(systemName: icon)
                         .font(.title)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(goal.imageData != nil ? .white : headerTextColor)
                 }
 
                 Text(goal.title)
                     .font(.title)
                     .fontWeight(.bold)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(goal.imageData != nil ? .white : headerTextColor)
 
                 HStack(spacing: 8) {
                     Image(systemName: goal.status.icon)
                     Text(goal.status.title)
                         .font(.subheadline)
                 }
-                .foregroundStyle(.white.opacity(0.9))
+                .foregroundStyle(goal.imageData != nil ? .white.opacity(0.9) : headerTextSecondary)
                 .padding(.horizontal, 12)
                 .padding(.vertical, 6)
-                .background(.white.opacity(0.2))
+                .background(goal.imageData != nil ? .white.opacity(0.2) : headerTextColor.opacity(0.1))
                 .clipShape(Capsule())
             }
             .padding()
@@ -194,7 +197,7 @@ struct GoalDetailView: View {
                             .padding(.horizontal, 12)
                             .padding(.vertical, 6)
                             .background(goal.progress == value ? goalColor : Color(.systemGray5))
-                            .foregroundStyle(goal.progress == value ? .white : .primary)
+                            .foregroundStyle(goal.progress == value ? headerTextColor : .primary)
                             .clipShape(Capsule())
                     }
                 }
@@ -444,9 +447,9 @@ struct EditGoalView: View {
     @State private var selectedImageData: Data?
 
     private let colorOptions = [
-        "#5856D6", "#AF52DE", "#007AFF", "#34C759",
-        "#FF9500", "#FF2D55", "#00C7BE", "#FF6482",
-        "#5AC8FA", "#FFCC00", "#8E8E93", "#30B0C7"
+        "#F5F0B0", "#F5D5B0", "#F0B8C0", "#F5C0D0",
+        "#D4B8E0", "#B8B5E0", "#B3D4F5", "#B8E0F0",
+        "#B0E8E0", "#B8E0C8", "#D0C8A8", "#B0B8C0"
     ]
 
     private let iconOptions = [
@@ -479,7 +482,7 @@ struct EditGoalView: View {
                                     .overlay {
                                         if color == selectedColor {
                                             Image(systemName: "checkmark")
-                                                .foregroundStyle(.white)
+                                                .foregroundStyle(Color(red: 0.2, green: 0.2, blue: 0.25))
                                                 .fontWeight(.bold)
                                         }
                                     }

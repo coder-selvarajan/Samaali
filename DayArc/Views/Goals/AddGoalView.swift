@@ -28,9 +28,9 @@ struct AddGoalView: View {
     @State private var currentStep = 0
 
     private let colorOptions = [
-        "#5856D6", "#AF52DE", "#007AFF", "#34C759",
-        "#FF9500", "#FF2D55", "#00C7BE", "#FF6482",
-        "#5AC8FA", "#FFCC00", "#8E8E93", "#30B0C7"
+        "#F5F0B0", "#F5D5B0", "#F0B8C0", "#F5C0D0",
+        "#D4B8E0", "#B8B5E0", "#B3D4F5", "#B8E0F0",
+        "#B0E8E0", "#B8E0C8", "#D0C8A8", "#B0B8C0"
     ]
 
     private let iconOptions = [
@@ -72,7 +72,7 @@ struct AddGoalView: View {
                                     .overlay {
                                         if color == selectedColor {
                                             Image(systemName: "checkmark")
-                                                .foregroundStyle(.white)
+                                                .foregroundStyle(Color(red: 0.2, green: 0.2, blue: 0.25))
                                                 .fontWeight(.bold)
                                         }
                                     }
@@ -268,13 +268,13 @@ struct GoalPreviewTile: View {
             HStack {
                 Image(systemName: icon)
                     .font(.title2)
-                    .foregroundStyle(.white.opacity(0.9))
+                    .foregroundStyle(Color(red: 0.2, green: 0.2, blue: 0.25).opacity(0.8))
 
                 Spacer()
 
                 Image(systemName: "circle")
                     .font(.caption)
-                    .foregroundStyle(.white.opacity(0.8))
+                    .foregroundStyle(Color(red: 0.35, green: 0.35, blue: 0.4))
             }
 
             Spacer()
@@ -282,13 +282,13 @@ struct GoalPreviewTile: View {
             Text(title)
                 .font(.headline)
                 .fontWeight(.semibold)
-                .foregroundStyle(.white)
+                .foregroundStyle(Color(red: 0.2, green: 0.2, blue: 0.25))
                 .lineLimit(2)
 
             if !description.isEmpty {
                 Text(description)
                     .font(.caption)
-                    .foregroundStyle(.white.opacity(0.8))
+                    .foregroundStyle(Color(red: 0.35, green: 0.35, blue: 0.4))
                     .lineLimit(2)
             }
 
@@ -298,7 +298,7 @@ struct GoalPreviewTile: View {
                 Text(hasTargetDate ? "\(daysRemaining) days remaining" : "No deadline set")
                     .font(.caption2)
             }
-            .foregroundStyle(.white.opacity(0.7))
+            .foregroundStyle(Color(red: 0.35, green: 0.35, blue: 0.4))
 
             // Progress bar placeholder
             VStack(alignment: .leading, spacing: 4) {
@@ -310,10 +310,10 @@ struct GoalPreviewTile: View {
                         .font(.caption2)
                         .fontWeight(.medium)
                 }
-                .foregroundStyle(.white.opacity(0.8))
+                .foregroundStyle(Color(red: 0.35, green: 0.35, blue: 0.4))
 
                 RoundedRectangle(cornerRadius: 4)
-                    .fill(.white.opacity(0.3))
+                    .fill(Color(red: 0.2, green: 0.2, blue: 0.25).opacity(0.15))
                     .frame(height: 6)
             }
         }
@@ -321,13 +321,13 @@ struct GoalPreviewTile: View {
         .frame(height: 180)
         .background(
             LinearGradient(
-                colors: [tileColor, tileColor.opacity(0.8)],
+                colors: [tileColor, tileColor.opacity(0.85)],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
         )
         .clipShape(RoundedRectangle(cornerRadius: AppConstants.UI.cornerRadius))
-        .shadow(color: tileColor.opacity(0.3), radius: 8, y: 4)
+        .shadow(color: tileColor.opacity(0.25), radius: 6, y: 3)
         .padding(.horizontal)
         .padding(.vertical, 8)
     }
