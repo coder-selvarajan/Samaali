@@ -311,6 +311,47 @@ struct SettingsView: View {
             modelContext.insert(goal)
         }
 
+        // Sample Goal Comments
+        // Fetch inserted goals to attach comments
+        let goalDescriptor = FetchDescriptor<Goal>(sortBy: [SortDescriptor(\.createdAt)])
+        if let goals = try? modelContext.fetch(goalDescriptor) {
+            let commentData: [String: [(String, Int)]] = [
+                "Learn SwiftUI": [
+                    ("Started with the basics — layouts, stacks, and modifiers. Feels intuitive!", -30),
+                    ("Completed the navigation and state management sections. @State and @Binding make sense now.", -18),
+                    ("Built a small weather app as practice. Hit 60% — feeling confident!", -5),
+                ],
+                "Run a half marathon": [
+                    ("Signed up for the race in June. Time to start training!", -25),
+                    ("First week of training done. Running 3K comfortably now.", -10),
+                ],
+                "Read 24 books this year": [
+                    ("Finished 'Atomic Habits' — great start to the challenge.", -40),
+                    ("Book 4 done: 'Deep Work'. Really changed how I think about focus.", -22),
+                    ("Halfway through book 6. A bit behind schedule but catching up.", -7),
+                    ("Started 'The Pragmatic Programmer'. Loving it so far.", -2),
+                ],
+                "Save emergency fund": [
+                    ("Set up a separate savings account. Ready to begin next month.", -12),
+                ],
+                "Complete online course": [
+                    ("Module 5 done — CoreData and SwiftData deep dive was excellent.", -45),
+                    ("Finished all 10 modules! Feels great to complete this.", -15),
+                    ("Got the certificate. Time to apply what I learned.", -14),
+                ],
+            ]
+
+            for goal in goals {
+                if let comments = commentData[goal.title] {
+                    for (content, dayOffset) in comments {
+                        let commentDate = calendar.date(byAdding: .day, value: dayOffset, to: now)!
+                        let comment = GoalComment(content: content, goal: goal, createdAt: commentDate)
+                        modelContext.insert(comment)
+                    }
+                }
+            }
+        }
+
         // Sample Habits
         let habitData: [(String, String, String)] = [
             ("Meditate", "brain.head.profile", "#AF52DE"),
@@ -334,7 +375,7 @@ struct SettingsView: View {
             modelContext.insert(habit)
         }
 
-        testDataMessage = "Generated 10 activities, 8 tasks, 5 goals, and 5 habits."
+        testDataMessage = "Generated 10 activities, 8 tasks, 5 goals with comments, and 5 habits."
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
             testDataMessage = nil
