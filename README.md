@@ -1,6 +1,6 @@
 # Samaali
 
-Samaali is a personal iOS app designed to track, analyze, and improve how users spend their time throughout the day.
+`Samaali` is a personal iOS app designed to track, analyze, and improve how users spend their time throughout the day.
 
 Unlike traditional productivity apps, Samaali focuses on awareness and reflection rather than pressure. The app combines manual activity logging, automation (screen time, timers), visual analytics, and on-device AI insights.
 
