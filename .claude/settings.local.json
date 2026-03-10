@@ -18,7 +18,8 @@
       "Bash(git mv DayArc_temp Samaali)",
       "Bash(git mv DayArc.xcodeproj DayArc_temp.xcodeproj)",
       "Bash(git mv DayArc_temp.xcodeproj Samaali.xcodeproj)",
-      "Bash(git add CLAUDE.md README.md Prompts.md Samaali.xcodeproj/ Samaali/ .claude/settings.local.json)"
+      "Bash(git add CLAUDE.md README.md Prompts.md Samaali.xcodeproj/ Samaali/ .claude/settings.local.json)",
+      "Bash(git add README.md)"
     ]
   }
 }
