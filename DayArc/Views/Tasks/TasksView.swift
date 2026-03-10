@@ -75,15 +75,8 @@ struct TasksView: View {
                 }
             }
             .navigationTitle("Tasks")
+            .toolbarTitleDisplayMode(.inlineLarge)
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button {
-                        appState.showSettings = true
-                    } label: {
-                        Image(systemName: "gearshape")
-                            .foregroundStyle(Theme.primary)
-                    }
-                }
                 ToolbarItem(placement: .primaryAction) {
                     Button {
                         showingAddTask = true

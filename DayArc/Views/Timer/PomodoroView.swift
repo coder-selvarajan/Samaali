@@ -16,13 +16,8 @@ struct PomodoroView: View {
 
     var body: some View {
         NavigationStack {
-            ZStack {
-                // Background
-                backgroundGradient
-
+            ScrollView {
                 VStack(spacing: 32) {
-                    Spacer()
-
                     // Session Type Selector
                     sessionTypeSelector
 
@@ -35,7 +30,7 @@ struct PomodoroView: View {
                     // Control Buttons
                     controlButtons
 
-                    Spacer()
+                    Spacer(minLength: 20)
 
                     // Session Progress
                     sessionProgressIndicator
@@ -44,18 +39,12 @@ struct PomodoroView: View {
                     statusLabel
                 }
                 .padding()
+                .frame(minHeight: UIScreen.main.bounds.height - 200)
             }
+            .background(backgroundGradient)
             .navigationTitle("Pomodoro")
-            .navigationBarTitleDisplayMode(.inline)
+            .toolbarTitleDisplayMode(.inlineLarge)
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button {
-                        appState.showSettings = true
-                    } label: {
-                        Image(systemName: "gearshape")
-                            .foregroundStyle(Theme.primary)
-                    }
-                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         showingTimerSettings = true

@@ -33,15 +33,8 @@ struct HabitsView: View {
                 }
             }
             .navigationTitle("Habits")
+            .toolbarTitleDisplayMode(.inlineLarge)
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button {
-                        appState.showSettings = true
-                    } label: {
-                        Image(systemName: "gearshape")
-                            .foregroundStyle(Theme.primary)
-                    }
-                }
                 ToolbarItem(placement: .primaryAction) {
                     Button {
                         showingAddHabit = true
@@ -101,6 +94,7 @@ struct HabitsView: View {
             }
         }
         .listStyle(.insetGrouped)
+        .listSectionSpacing(.compact)
     }
 
     private var dateNavigationView: some View {
