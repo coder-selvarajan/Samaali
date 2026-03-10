@@ -384,25 +384,11 @@ struct CommentRow: View {
     let onDelete: () -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 6) {
             HStack {
-                Circle()
-                    .fill(goalColor.opacity(0.2))
-                    .frame(width: 32, height: 32)
-                    .overlay {
-                        Image(systemName: "person.fill")
-                            .font(.caption)
-                            .foregroundStyle(goalColor)
-                    }
-
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("You")
-                        .font(.subheadline)
-                        .fontWeight(.medium)
-                    Text(comment.formattedDate)
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
-                }
+                Text(comment.formattedDate)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
 
                 Spacer()
 
