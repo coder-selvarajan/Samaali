@@ -11,9 +11,9 @@ import SwiftData
 @Model
 final class GoalComment {
     // MARK: - Properties
-    var id: UUID
-    var content: String
-    var createdAt: Date
+    var id: UUID = UUID()
+    var content: String = ""
+    var createdAt: Date = Date()
 
     // MARK: - Relationship
     var goal: Goal?

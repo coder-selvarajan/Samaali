@@ -10,15 +10,20 @@ import SwiftData
 
 @Model
 final class Tag {
-    var id: UUID
-    var name: String
-    var colorHex: String
+    var id: UUID = UUID()
+    var name: String = ""
+    var colorHex: String = "#007AFF"
     var icon: String?
-    var isSystem: Bool
-    var createdAt: Date
+    var isSystem: Bool = false
+    var createdAt: Date = Date()
 
-    @Relationship(deleteRule: .nullify)
     var activities: [Activity]?
+
+    @Relationship(deleteRule: .nullify, inverse: \UserTask.tags)
+    var tasks: [UserTask]?
+
+    @Relationship(deleteRule: .nullify, inverse: \Goal.tags)
+    var goals: [Goal]?
 
     init(
         id: UUID = UUID(),

@@ -10,13 +10,13 @@ import SwiftData
 
 @Model
 final class PomodoroSession {
-    var id: UUID
-    var type: SessionType
-    var durationMinutes: Int
-    var startTime: Date
+    var id: UUID = UUID()
+    var type: SessionType = SessionType.focus
+    var durationMinutes: Int = 25
+    var startTime: Date = Date()
     var endTime: Date?
-    var wasCompleted: Bool
-    var createdAt: Date
+    var wasCompleted: Bool = false
+    var createdAt: Date = Date()
 
     var linkedActivity: Activity?
 

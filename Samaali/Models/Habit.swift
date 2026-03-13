@@ -10,12 +10,12 @@ import SwiftData
 
 @Model
 final class Habit {
-    var id: UUID
-    var name: String
-    var icon: String
-    var colorHex: String
-    var createdAt: Date
-    var isArchived: Bool
+    var id: UUID = UUID()
+    var name: String = ""
+    var icon: String = "checkmark.circle"
+    var colorHex: String = "#5856D6"
+    var createdAt: Date = Date()
+    var isArchived: Bool = false
 
     @Relationship(deleteRule: .cascade, inverse: \HabitLog.habit)
     var logs: [HabitLog]?

@@ -19,7 +19,9 @@
       "Bash(git mv DayArc.xcodeproj DayArc_temp.xcodeproj)",
       "Bash(git mv DayArc_temp.xcodeproj Samaali.xcodeproj)",
       "Bash(git add CLAUDE.md README.md Prompts.md Samaali.xcodeproj/ Samaali/ .claude/settings.local.json)",
-      "Bash(git add README.md)"
+      "Bash(git add README.md)",
+      "Bash(find /Users/selvarajan/Documents/_ST/_Projects/_SamaaliApp/source-code/Samaali -type f -name SamaaliApp.swift -o -name *.entitlements -o -name Info.plist)",
+      "Bash(grep -r \"sync\\\\|migration\\\\|schema\" /Users/selvarajan/Documents/_ST/_Projects/_SamaaliApp/source-code/Samaali/Samaali/*.swift)"
     ]
   }
 }

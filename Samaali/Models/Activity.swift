@@ -11,18 +11,24 @@ import SwiftData
 @Model
 final class Activity {
     // MARK: - Core Properties
-    var id: UUID
-    var title: String
+    var id: UUID = UUID()
+    var title: String = ""
     var notes: String?
-    var startTime: Date
+    var startTime: Date = Date()
     var endTime: Date?
-    var source: ActivitySource
-    var createdAt: Date
-    var updatedAt: Date
+    var source: ActivitySource = ActivitySource.manual
+    var createdAt: Date = Date()
+    var updatedAt: Date = Date()
 
     // MARK: - Relationships
-    @Relationship(deleteRule: .nullify)
+    @Relationship(deleteRule: .nullify, inverse: \Tag.activities)
     var tags: [Tag]?
+
+    @Relationship(deleteRule: .nullify, inverse: \UserTask.linkedActivity)
+    var linkedTasks: [UserTask]?
+
+    @Relationship(deleteRule: .nullify, inverse: \PomodoroSession.linkedActivity)
+    var pomodoroSessions: [PomodoroSession]?
 
     // MARK: - AI Insights (Prompt B Extension)
     /// Productivity score from 0.0 to 1.0, set by AI analysis
@@ -35,7 +41,7 @@ final class Activity {
     var suggestedCategory: String?
 
     /// Whether the user has reviewed/confirmed AI suggestions
-    var aiInsightsReviewed: Bool
+    var aiInsightsReviewed: Bool = false
 
     // MARK: - Optional Metadata
     /// User's energy level at the time (1-5 scale)

@@ -82,16 +82,17 @@ final class TagService {
 
     func initializeSystemTagsIfNeeded() throws {
         let existingTags = try fetchSystemTags()
-
-        guard existingTags.isEmpty else { return }
+        let existingNames = Set(existingTags.map { $0.name })
 
         for tagInfo in Tag.systemTags {
-            _ = createTag(
-                name: tagInfo.name,
-                colorHex: tagInfo.colorHex,
-                icon: tagInfo.icon,
-                isSystem: true
-            )
+            if !existingNames.contains(tagInfo.name) {
+                _ = createTag(
+                    name: tagInfo.name,
+                    colorHex: tagInfo.colorHex,
+                    icon: tagInfo.icon,
+                    isSystem: true
+                )
+            }
         }
     }
 }

@@ -11,22 +11,22 @@ import SwiftData
 @Model
 final class Goal {
     // MARK: - Core Properties
-    var id: UUID
-    var title: String
-    var goalDescription: String
-    var colorHex: String
-    var status: GoalStatus
-    var createdAt: Date
-    var updatedAt: Date
+    var id: UUID = UUID()
+    var title: String = ""
+    var goalDescription: String = ""
+    var colorHex: String = "#B8B5E0"
+    var status: GoalStatus = GoalStatus.notStarted
+    var createdAt: Date = Date()
+    var updatedAt: Date = Date()
 
     // MARK: - Timeline
-    var startDate: Date
+    var startDate: Date = Date()
     var targetDate: Date?
 
     // MARK: - Progress
-    var progress: Double // 0.0 to 1.0
-    var milestones: Int
-    var completedMilestones: Int
+    var progress: Double = 0.0
+    var milestones: Int = 0
+    var completedMilestones: Int = 0
 
     // MARK: - Optional Properties
     var imageData: Data?

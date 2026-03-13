@@ -10,19 +10,22 @@ import SwiftData
 
 @Model
 final class UserTask {
-    var id: UUID
-    var title: String
+    var id: UUID = UUID()
+    var title: String = ""
     var notes: String?
-    var isCompleted: Bool
+    var isCompleted: Bool = false
     var dueDate: Date?
     var reminderDate: Date?
-    var priority: TaskPriority
-    var createdAt: Date
+    var priority: TaskPriority = TaskPriority.medium
+    var createdAt: Date = Date()
     var completedAt: Date?
 
     var tags: [Tag]?
 
     var linkedActivity: Activity?
+
+    @Relationship(deleteRule: .nullify, inverse: \PomodoroSession.linkedTask)
+    var pomodoroSessions: [PomodoroSession]?
 
     init(
         id: UUID = UUID(),

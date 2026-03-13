@@ -10,9 +10,9 @@ import SwiftData
 
 @Model
 final class HabitLog {
-    var id: UUID
-    var date: Date
-    var isCompleted: Bool
+    var id: UUID = UUID()
+    var date: Date = Date()
+    var isCompleted: Bool = true
     var completedAt: Date?
 
     var habit: Habit?
